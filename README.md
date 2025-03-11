@@ -21,6 +21,5 @@
 
 ## Requisitos Previos
 
-Para utilizar SentinelAI, asegúrate de cumplir con los siguientes requisitos:
 
 
