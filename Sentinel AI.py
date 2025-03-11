@@ -23,5 +23,68 @@ title_image = ctk.CTKImage (light_image = img, dark_image =img, size=(600, 200))
 title_label = ctk:CTKLaber (app, image=title_image, text ="")
 title_label.pack (side= "top", pady=20)
 
+def cargar_imagen(nombre_archivo, tamaño):
+    ruta_imagen = os.path.join(recursos_folder, nombre_archivo)
+    if not os.path.exists(ruta_imagen):
+        print(f"Advertencia: La imagen '{ruta_imagen}' no existe.")
+        return None
+    img = Image.open(ruta_imagen).resize(tamaño, Image.Resampling.LANCZOS)
+    return ctk.CTkImage(light_image=img, dark_image=img, size=tamaño)
+
+# Tamaño de los botones
+boton_ancho = 146
+boton_alto = 48
+
+# Carga de imágenes
+video_image = cargar_imagen("camara.png", (boton_ancho, boton_alto))
+imagen_image = cargar_imagen("imagen.png", (boton_ancho, boton_alto))
+salir_image = cargar_imagen("salir.png", (boton_ancho, boton_alto))
+
+# Verifica que las imágenes se hayan cargado correctamente
+if not all([video_image, imagen_image, salir_image]):
+    print("Error: Una o más imágenes no se pudieron cargar. Verifica las rutas y nombres de archivo.")
+    app.quit()
+
+# Crea el frame para los botones
+bottom_frame = ctk.CTkFrame(app)
+bottom_frame.pack(side="bottom", fill="x", pady=10)
+bottom_frame.columnconfigure([0, 1, 2], weight=1)
+
+# Botón para Video
+btn_video = ctk.CTkButton(
+    bottom_frame,
+    image=video_image,
+    text="",
+    command=,
+    width=boton_ancho,
+    height=boton_alto,
+    fg_color=None  # Hace transparente el fondo del botón
+)
+btn_video.grid(row=0, column=0, padx=10)
+
+# Botón para Imagen
+btn_imagen = ctk.CTkButton(
+    bottom_frame,
+    image=imagen_image,
+    text="",
+    command=,
+    width=boton_ancho,
+    height=boton_alto,
+    fg_color=None
+)
+btn_imagen.grid(row=0, column=1, padx=10)
+
+# Botón para Salir
+btn_salir = ctk.CTkButton(
+    bottom_frame,
+    image=salir_image,
+    text="",
+    command=,
+    width=boton_ancho,
+    height=boton_alto,
+    fg_color=None
+)
+btn_salir.grid(row=0, column=2, padx=10)
+
 app.mainloop()
                       
