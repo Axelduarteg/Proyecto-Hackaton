@@ -40,6 +40,9 @@ if not image_files:
   top.destroy()
   return
 
+selected_image =ctk.StringVar (value =iamge_files[0])
+option_menu = CTK.CTKOptionMenu(top, values=image_files, variable =selccted_image)
+option_menu.pack(pady=20)
 
 
 
