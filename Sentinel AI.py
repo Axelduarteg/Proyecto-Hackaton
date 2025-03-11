@@ -1,11 +1,11 @@
 import customtkinter as ctk
 import pywinstyles
-from PIL import Image, ImageSequence
+from PIL import Image
 import cv2
-import glob 
-import tkinter.messagebox as messgebox
+import glob
+import tkinter.messagebox as messagebox 
+import os
 from ultralytics import YOLO
-import os 
 
 base_dir = os.pata.dirname(os.path.abspath(__file__))
 resources_folder = os.path.join (base_dir, "resources")
@@ -22,45 +22,44 @@ def open_picture():
   top.title("selec image")
   top.geometry("400x200")
   ctk.set_appearance_mode("system")
-  ctk.set_default_color_theme ("blue")
+  ctk.set_default_color_theme ("blue")            
 
+  open_picture = cargar_imagen("abrir.png", (boton_ancho, boton_alto))
+  exit_picture = cargar_imagen ("salir.png" , (boton_ancho, boton_alto))
 
-open_picture = load_image("abrir.png", (boton_ancho, boton_alto))
-exit_picture = load_image ("salir.png" , (boton_ancho, boton_alto))
+  if not all ([open_picture, exit_picture]):
+    print("Error: Una o más imágenes no se pudieron cargar. Verifica las rutas y nombres del archivo.") 
+    top.destroy()
+    return 
 
-if not all ([open_picture, exit_picture])
-  print("Error: Una o más imágenes no se pudieron cargar. Verifica las rutas y nombres del archivo.") 
-  top.destroy()
-  return 
+  image_files = glob.glob(os.path.join(user_media_folder, "*.png")) + \
+                glob.glob(os.path.join(user_media_folder, "*.jpg"))
+  if not image_files:
+    messagebox.showerror("Error","No se encontraron imagenes en 'images and recordings'.")
+    top.destroy()
+    return
 
-image_files = glob.glob(os.path.join(user_media_folder, "*.png")) + \
-              glob.glob(os.path.join(user_media_flder, "*.jpg"))
-if not image_files:
-  messagebox.showerror("Error","No se encontraron imagenes en 'images and recordings'.")
-  top.destroy()
-  return
+  selected_image =ctk.StringVar (value =image_files[0])
+  option_menu = ctk.CTKOptionMenu(top, values= image_files, variable=selected_image)
+  option_menu.pack(pady= 20)
 
- selected_image =ctk.StringVar (value =iamge_files[0])
- option_menu = CTK.CTKOptionMenu(top, values= image_files, variable =selccted_image)
- option_menu.pack(pady= 20)
+  button_frame = ctk.CTKFrame (top)
+  button_frame.pack (pady=10)
 
- button_frame = ctk.CTKFrame (top)
- button_frame.pack (pady=10)
+  def open_selection():
+    path_image = selected_image.get()
+    imagen = cv2.imread(path_image)
+    if imagen is None: 
+      messagebox.showerror("Error", "No se puedo cargar la imagen seleccionada")
+      return
 
- def open_selection():
-   path_image = selected_image.get()
-   imagen = cv2.imread(path_image)
-   if imagen is None: 
-     messagebox.showerror("Error", "No se puedo cargar la imagen seleccionada")
-     return
+    resultados = model(imagen, conf=0.3)
+    imagen_renderizada = resultados[0].plot()
 
-  resultados = model(imagen, conf=0.3)
-  imagen_renderrizada = results[0].plot()
-
-  cv2:imshow('Detección de arma - imagen', imagen_renderizada)
-  cv2.waitKey(0)
-  cv2.destroyALLWindows()
-  top.destroy()
+    cv2.imshow('Detección de arma - imagen', imagen_renderizada)
+    cv2.waitKey(0)
+    cv2.destroyALLWindows()
+    top.destroy()
 
 app = ctk.CTk()
 app.geometry("600x400")
@@ -72,11 +71,11 @@ ctk.set_default_color_theme("blue")
 title_img_path = os.path.join (resources_folder, "title.png")
 img = Image.open (title_img_path)
 title_image = ctk.CTKImage (light_image = img, dark_image =img, size=(600, 200))
-title_label = ctk:CTKLaber (app, image=title_image, text ="")
+title_label = ctk.CTKLaber (app, image=title_image, text ="")
 title_label.pack (side= "top", pady=20)
 
 def cargar_imagen(nombre_archivo, tamaño):
-    ruta_imagen = os.path.join(recursos_folder, nombre_archivo)
+    ruta_imagen = os.path.join(resources_folder, nombre_archivo)
     if not os.path.exists(ruta_imagen):
         print(f"Advertencia: La imagen '{ruta_imagen}' no existe.")
         return None
@@ -139,4 +138,3 @@ btn_salir = ctk.CTkButton(
 btn_salir.grid(row=0, column=2, padx=10)
 
 app.mainloop()
-                      
