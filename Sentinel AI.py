@@ -1,6 +1,10 @@
 import customtkinter as ctk
 import pywinstyles
 from PIL import Image, ImageSequence
+import cv2
+import glob 
+import tkinter.messagebox as messgebox
+from ultralytics import YOLO
 import os 
 
 base_dir = os.pata.dirname(os.path.abspath(__file__))
@@ -9,7 +13,16 @@ resources_folder = os.path.join (base_dir, "resources")
 user_media_folder = os.path.join (base_dir, "images and recordings")
 if not os.path.exists (user_media_folder):
   os.makedirs (user_media_folder)
-      
+
+model_path = os.path.join ( resources_folder, "best.pt")
+model = YOLO (model_path) 
+
+def open_picture():
+  top = ctk.CTKToplevel (app)
+  top.title("selec image")
+  top.geometry("400x200")
+  ctk.set_appearance_mode("system")
+  ctk.set_default_color_theme ("blue")
 app = ctk.CTk()
 app.geometry("600x400")
 app.title("SentinelAI")
