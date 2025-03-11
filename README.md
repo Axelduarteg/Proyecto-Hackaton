@@ -2,7 +2,7 @@
 
 **Sentinel AI** es una solución innovadora que utiliza inteligencia artificial y el modelo YOLO (You Only Look Once). En un mundo donde la criminalidad es un problema y tu seguridad debe ser tu prioridad. Este sistema esta diseñado para detectar amenazas potenciales en tiempo real a partir de la captura de imágenes. Identifica tanto armas de fuego como armas blancas. Combina algoritmos avanzados de procesamiento de imagenes con una interfaz gráfica amigable. Sentinel AI es la herramienta esencial que necesitas para mejorar la seguridad en espacios públicos y privados.
 
-## Características
+## ¿Por qué elegir Sentinel AI?
 
 - **Deteccion en tiempo real**: Captura y analiza video en vivo a través de la cámara web para identificar las amenazas de manera inmediata.
 - **Analiza imágenes**: Permite seleccionar y procesar imágenes almacenadas en la carpeta del usuario para realizar análisis retrospectivos.
