@@ -26,9 +26,9 @@ def open_picture():
 
 
 open_picture = load_image("abrir.png", (boton_ancho, boton_alto))
-exit_picture = load_image ("salir.png", (boton_ancho, boton_alto))
+exit_picture = load_image ("salir.png" , (boton_ancho, boton_alto))
 
-if not all ([open_picture, exit_picture]):
+if not all ([open_picture, exit_picture])
   print("Error: Una o más imágenes no se pudieron cargar. Verifica las rutas y nombres del archivo.") 
   top.destroy()
   return 
@@ -40,11 +40,27 @@ if not image_files:
   top.destroy()
   return
 
-selected_image =ctk.StringVar (value =iamge_files[0])
-option_menu = CTK.CTKOptionMenu(top, values=image_files, variable =selccted_image)
-option_menu.pack(pady=20)
+ selected_image =ctk.StringVar (value =iamge_files[0])
+ option_menu = CTK.CTKOptionMenu(top, values= image_files, variable =selccted_image)
+ option_menu.pack(pady= 20)
 
+ button_frame = ctk.CTKFrame (top)
+ button_frame.pack (pady=10)
 
+ def open_selection():
+   path_image = selected_image.get()
+   imagen = cv2.imread(path_image)
+   if imagen is None: 
+     messagebox.showerror("Error", "No se puedo cargar la imagen seleccionada")
+     return
+
+  resultados = model(imagen, conf=0.3)
+  imagen_renderrizada = results[0].plot()
+
+  cv2:imshow('Detección de arma - imagen', imagen_renderizada)
+  cv2.waitKey(0)
+  cv2.destroyALLWindows()
+  top.destroy()
 
 app = ctk.CTk()
 app.geometry("600x400")
