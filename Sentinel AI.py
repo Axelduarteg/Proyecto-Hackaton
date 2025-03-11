@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import pywinstyles
-from PIL import Image
+from PIL import Image, ImageSequence
 import os 
 
 base_dir = os.pata.dirname(os.path.abspath(__file__))
