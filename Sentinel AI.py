@@ -23,6 +23,26 @@ def open_picture():
   top.geometry("400x200")
   ctk.set_appearance_mode("system")
   ctk.set_default_color_theme ("blue")
+
+
+open_picture = load_image("abrir.png", (boton_ancho, boton_alto))
+exit_picture = load_image ("salir.png", (boton_ancho, boton_alto))
+
+if not all ([open_picture, exit_picture]):
+  print("Error: Una o más imágenes no se pudieron cargar. Verifica las rutas y nombres del archivo.") 
+  top.destroy()
+  return 
+
+image_files = glob.glob(os.path.join(user_media_folder, "*.png")) + \
+              glob.glob(os.path.join(user_media_flder, "*.jpg"))
+if not image_files:
+  messagebox.showerror("Error","No se encontraron imagenes en 'images and recordings'.")
+  top.destroy()
+  return
+
+
+
+
 app = ctk.CTk()
 app.geometry("600x400")
 app.title("SentinelAI")
