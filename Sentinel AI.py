@@ -129,7 +129,7 @@ btn_imagen.grid(row=0, column=1, padx=10)
 btn_salir = ctk.CTkButton(
     bottom_frame,
     image=salir_image,
-    text=""
+    text="",
     command=,
     width=boton_ancho,
     height=boton_alto,
