@@ -6,6 +6,8 @@ import glob
 import tkinter.messagebox as messagebox 
 import os
 from ultralytics import YOLO
+import time 
+import threading
 
 base_dir = os.pata.dirname(os.path.abspath(__file__))
 resources_folder = os.path.join (base_dir, "resources")
@@ -46,7 +48,10 @@ def video_loop():
    cap.release()
    cv2.destroyAllWindows()
 
-
+def star_video_thread():
+  video_thread = threading.Thread(target=video_loop, daemon=True)
+  video_thread.start()
+  
 def open_picture():
   top = ctk.CTKToplevel (app)
   top.title("selec image")
