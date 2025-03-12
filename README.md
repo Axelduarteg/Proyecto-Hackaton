@@ -7,7 +7,7 @@
 - **Deteccion en tiempo real**: Captura y analiza video en vivo a través de la cámara web para identificar las amenazas de manera inmediata.
 - **Analiza imágenes**: Permite seleccionar y procesar imágenes almacenadas en la carpeta del usuario para realizar análisis retrospectivos.
 - **Interfaz gráfica**: Utiliza CustomTkinter y pywinstyles para ofrecer un entorno visual amigable, adaptado a sistemas operativos de Windows.
-- **Algoritmo de IA** Emplea el modelo YOLOv12 para realizar detecciones precisas y efectivas de armas.
+- **Algoritmo de IA** Emplea el modelo YOLOv11 para realizar detecciones precisas y efectivas de armas.
 - **Sistema de Alarma**: Al detectar una amenaza, Sentinel AI envía un aviso directamente al propietario del sistema a través de una ventana visual y sonido, permitiendo que la persona actúe sin alertar al potencial agresor.
 
 ## Técnologías Utilizadas
