@@ -12,7 +12,7 @@
 
 ## Características Principales
 
-- **Detección en tiempo real:** Utiliza el modelo YOLOv11 para identificar objetos sospechosos, como armas blancas, armas de fuego y munición, con alta precisión.  
+- **Detección en tiempo real:** Utiliza el modelo YOLOv12 para identificar objetos sospechosos, como armas blancas, armas de fuego y munición, con alta precisión.  
 - **Alarmas visibles y auditivas:** Al detectar una amenaza, el sistema emite alertas inmediatas tanto visuales como sonoras, permitiendo una respuesta rápida.  
 - **Grabación de pantalla:** Activa automáticamente la grabación cuando la detección supera un umbral de confianza predefinido, almacenando evidencia en caso de incidentes.  
 - **Interfaz intuitiva:** Diseño amigable y fácil de usar, permitiendo la monitorización en vivo de forma eficiente y accesible para cualquier usuario.  
