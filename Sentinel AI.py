@@ -20,7 +20,7 @@ last_alarm_time = 0
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Carpeta de recursos para el programa (contendrá best.pt, title.png, alarm.gif, etc.)
-recursos_folder = os.path.join(base_dir, "recursos")
+recursos_folder = os.path.join(base_dir, "resources")
 
 # Carpeta donde el usuario colocará imágenes y grabaciones
 user_media_folder = os.path.join(base_dir, "imagenes y grabaciones")
