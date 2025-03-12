@@ -1,0 +1,8 @@
+customtkinter
+pywinstyles
+pillow
+opencv-python
+ultralytics
+tk
+pyautogui
+numpy
