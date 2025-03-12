@@ -35,7 +35,7 @@
 Antes de ejecutar Sentinel AI, asegúrate de cumplir con los siguientes requisitos:
 
 - **Sistema Operativo:** Windows 10 o superior
-- **Python 3.8 o superior** (Se recomienda un entorno virtual para evitar conflictos de dependencias)
+- **Python 3.8 o superior**
 - **Dependencias necesarias:** Instálalas con el siguiente comando:
 
   ```bash
