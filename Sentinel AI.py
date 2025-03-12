@@ -32,7 +32,21 @@ def video_loop():
      
     resultados = model(frame, conf=0.4)
     rendered_frame = resultados[0].plot()
-    
+
+    if time.time() - video_start_time >=1:
+      detections = []
+      if hasattr(resultados[0], "boxes") and resultados[0].boxes is not None:
+                detections = resultados[0].boxes.data.tolist()
+            if not alarm_active and any(det[4] >= 0.5 for det in detections)
+                app.after(0, show_alarm)
+    cv2.imshow('detención de arma - Video', rendered_frame) 
+    if cv2.waitkey(5) & 0xFF == 27
+     break
+
+   cap.release()
+   cv2.destroyAllWindows()
+
+
 def open_picture():
   top = ctk.CTKToplevel (app)
   top.title("selec image")
