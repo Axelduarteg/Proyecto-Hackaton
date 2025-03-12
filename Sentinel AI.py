@@ -1,4 +1,4 @@
- import customtkinter as ctk
+import customtkinter as ctk
 import pywinstyles
 from PIL import Image
 import cv2
@@ -23,6 +23,15 @@ def video_loop():
   if not cap.is0pened():
     print("No se pudo abrir la camara")
     return
+   
+   video_start_time = time.time()
+   while True:
+    ret, frame = cap.read()
+    if not ret:
+     break
+     
+    resultados = model(frame, conf=0.4)
+    rendered_frame = resultados[0].plot()
     
 def open_picture():
   top = ctk.CTKToplevel (app)
