@@ -1,4 +1,4 @@
-import customtkinter as ctk
+ import customtkinter as ctk
 import pywinstyles
 from PIL import Image
 import cv2
@@ -17,6 +17,13 @@ if not os.path.exists (user_media_folder):
 model_path = os.path.join ( resources_folder, "best.pt")
 model = YOLO (model_path) 
 
+def video_loop():
+  global alarm_active
+  cap = cv2.VideoCapture(0)
+  if not cap.is0pened():
+    print("No se pudo abrir la camara")
+    return
+    
 def open_picture():
   top = ctk.CTKToplevel (app)
   top.title("selec image")
