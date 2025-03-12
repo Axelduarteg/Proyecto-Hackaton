@@ -1,13 +1,20 @@
 import customtkinter as ctk
 import pywinstyles
-from PIL import Image
+from PIL import Image, ImageSequence
 import cv2
+from ultralytics import YOLO
 import glob
 import tkinter.messagebox as messagebox 
 import os
-from ultralytics import YOLO
-import time 
+import time
 import threading
+import pyautogui
+import numpy as np
+from datetime import datetime
+
+# Variables globales para el control de la alarma
+alarm_active = False
+last_alarm_time = 0
 
 # Obtiene el directorio base del script.
 base_dir = os.pata.dirname(os.path.abspath(__file__))
@@ -22,6 +29,138 @@ if not os.path.exists (user_media_folder):
 model_path = os.path.join ( resources_folder, "best.pt")
 model = YOLO (model_path) 
 
+def show_alarm():
+    global alarm_active, last_alarm_time
+    current_time = time.time()
+    # Si la alarma ya está activa o si no ha pasado el tiempo de espera, salir
+    if alarm_active or (current_time - last_alarm_time < 1):
+        return
+
+    alarm_active = True
+    last_alarm_time = current_time
+
+    # Función para grabar la pantalla mientras la alarma esté activa
+    def record_screen():
+        try:
+            # Obtener dimensiones de la pantalla
+            screen_size = pyautogui.size()
+            
+            # Crear nombre de archivo con fecha y hora
+            timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+            video_path = os.path.join(user_media_folder, f"screen_recording_{timestamp}.mp4")
+            
+            # Configurar grabación
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            fps = 10.0  # Puedes ajustar los frames por segundo
+            out = cv2.VideoWriter(video_path, fourcc, fps, screen_size)
+            
+            print("Iniciando grabación de pantalla en:", video_path)
+            
+            while alarm_active:
+                img = pyautogui.screenshot()
+                frame = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+                out.write(frame)
+                time.sleep(1 / fps)
+            
+            out.release()
+            print("Grabación de pantalla finalizada.")
+            
+        except Exception as e:
+            print("Error durante la grabación de pantalla:", e)
+
+    # Iniciar la grabación en un hilo separado
+    screen_thread = threading.Thread(target=record_screen, daemon=True)
+    screen_thread.start()
+
+    # Construir la ruta completa al GIF de alarma
+    gif_path = os.path.join(recursos_folder, "alarm.gif")
+    print("Buscando GIF en:", gif_path)
+    
+    if not os.path.exists(gif_path):
+        print("No se encontró el archivo:", gif_path)
+        alarm_active = False
+        return
+    
+    try:
+        im = Image.open(gif_path)
+    except Exception as e:
+        print("Error al cargar el GIF de alarma:", e)
+        alarm_active = False
+        return
+
+    # Dimensiones para el pop up de la alarma
+    win_width, win_height = 500, 275
+    # Extraer los frames y convertirlos a CTkImage
+    frames = []
+    try:
+        for frame in ImageSequence.Iterator(im):
+            frame_copy = frame.copy().resize((win_width, win_height))
+            ctk_img = ctk.CTkImage(light_image=frame_copy, dark_image=frame_copy, size=(win_width, win_height))
+            frames.append(ctk_img)
+    except Exception as e:
+        print("Error al procesar los frames del GIF:", e)
+        alarm_active = False
+        return
+
+    if not frames:
+        print("No se pudieron obtener frames del GIF.")
+        alarm_active = False
+        return
+
+    # Iniciar reproducción del audio de alarma
+    mp3_path = os.path.join(recursos_folder, "alarm.mp3")
+    print("Buscando audio en:", mp3_path)
+    if not os.path.exists(mp3_path):
+        print("No se encontró el archivo de audio:", mp3_path)
+    else:
+        try:
+            import pygame
+            pygame.mixer.init()
+            pygame.mixer.music.load(mp3_path)
+            pygame.mixer.music.play(loops=-1)  # loops=-1 para reproducir en bucle
+        except Exception as e:
+            print("Error al reproducir el audio de alarma:", e)
+
+    # Crear una ventana emergente (pop up) sin padre para mostrar el GIF
+    alarm_window = ctk.CTkToplevel()
+    alarm_window.overrideredirect(True)
+    alarm_window.title("¡ALARMA!")
+    
+    # Centrar la ventana en la pantalla
+    screen_width = alarm_window.winfo_screenwidth()
+    screen_height = alarm_window.winfo_screenheight()
+    x = (screen_width - win_width) // 2
+    y = (screen_height - win_height) // 2
+    alarm_window.geometry(f"{win_width}x{win_height}+{x}+{y}")
+    
+    # Crear una etiqueta que mostrará el GIF, iniciando con el primer frame
+    gif_label = ctk.CTkLabel(alarm_window, image=frames[0], text="")
+    gif_label.pack(expand=True, fill="both")
+    
+    # Función para animar el GIF
+    def animate(ind=0):
+        gif_label.configure(image=frames[ind])
+        ind = (ind + 1) % len(frames)
+        alarm_window.after(100, animate, ind)
+    
+    animate(0)
+    
+    # Función para cerrar la alarma, detener el audio y la grabación, y destruir la ventana
+    def close_alarm(event=None):
+        global alarm_active
+        alarm_active = False
+        try:
+            import pygame
+            pygame.mixer.music.stop()  # Detener la reproducción del audio
+        except Exception as e:
+            print("Error al detener el audio de alarma:", e)
+        alarm_window.destroy()
+    
+    # Cerrar la alarma al detectar clic en cualquier parte del pop up
+    alarm_window.bind("<Button>", close_alarm)
+    # Cerrar el pop up automáticamente después de 30 segundos
+    alarm_window.after(30000, close_alarm)
+  
 # Función que se ejecuta en un bucle para procesar el vídeo de la cámara.
 def video_loop():
   global alarm_active
@@ -108,6 +247,33 @@ def open_picture():
     cv2.destroyALLWindows()
     top.destroy()
 
+  # Botón para Abrir
+    btn_abrir = ctk.CTkButton(
+        button_frame,
+        image=abrir_image,
+        text="",
+        command=abrir_seleccion,
+        width=boton_ancho,
+        height=boton_alto,
+        fg_color=None  # Hace transparente el fondo del botón
+    )
+    btn_abrir.pack(side="left", padx=10)
+
+    # Botón para Salir
+    btn_salir = ctk.CTkButton(
+        button_frame,
+        image=salir_image,
+        text="",
+        command=top.destroy,
+        width=boton_ancho,
+        height=boton_alto,
+        fg_color=None
+    )
+    btn_salir.pack(side="left", padx=10)
+    
+def salir_app():
+  app.destroy()
+
 app = ctk.CTk()
 app.geometry("600x400")
 app.title("SentinelAI")
@@ -154,7 +320,7 @@ btn_video = ctk.CTkButton(
     bottom_frame,
     image=video_image,
     text="",
-    command=,
+    command=start_video_thread,
     width=boton_ancho,
     height=boton_alto,
     fg_color=None  # Hace transparente el fondo del botón.
@@ -166,7 +332,7 @@ btn_imagen = ctk.CTkButton(
     bottom_frame,
     image=imagen_image,
     text="",
-    command=,
+    command=abrir_imagen,
     width=boton_ancho,
     height=boton_alto,
     fg_color=None
@@ -178,7 +344,7 @@ btn_salir = ctk.CTkButton(
     bottom_frame,
     image=salir_image,
     text="",
-    command=,
+    command=salir_app,
     width=boton_ancho,
     height=boton_alto,
     fg_color=None
