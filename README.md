@@ -18,6 +18,10 @@
 - **CustomTkinter**
 - **pywinstyles**
 - **Pillow (PIL)**
+- **Pywinstyles**
+- **Glob**
+- **Threading**
+- **Pyautogui**
 
 ## Requisitos Previos
 
